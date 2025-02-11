@@ -1,0 +1,58 @@
+local p = game.Players.LocalPlayer
+local sg = Instance.new("ScreenGui", p:WaitForChild("PlayerGui"))
+sg.ResetOnSpawn = false
+
+-- Default color (can be changed)
+local savedColor = Color3.fromRGB(50, 50, 50)
+
+-- Color Selection UI
+local colorFrame = Instance.new("Frame", sg)
+colorFrame.Size = UDim2.new(0, 250, 0, 150)
+colorFrame.Position = UDim2.new(0.5, -125, 0.4, 0)
+colorFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+
+local title = Instance.new("TextLabel", colorFrame)
+title.Size = UDim2.new(1, 0, 0, 30)
+title.Text = "Pick a Background Color"
+title.TextColor3 = Color3.new(1, 1, 1)
+title.BackgroundTransparency = 1
+
+local function createColorButton(name, color, pos)
+    local btn = Instance.new("TextButton", colorFrame)
+    btn.Size = UDim2.new(0, 75, 0, 50)
+    btn.Position = pos
+    btn.BackgroundColor3 = color
+    btn.Text = name
+    btn.TextColor3 = Color3.new(1, 1, 1)
+    btn.MouseButton1Click:Connect(function()
+        savedColor = color
+        colorFrame:Destroy()
+        startMainGUI() -- Calls the main GUI function
+    end)
+    return btn
+end
+
+createColorButton("Red", Color3.fromRGB(255, 0, 0), UDim2.new(0, 10, 0, 40))
+createColorButton("Blue", Color3.fromRGB(0, 0, 255), UDim2.new(0, 90, 0, 40))
+createColorButton("Green", Color3.fromRGB(0, 255, 0), UDim2.new(0, 170, 0, 40))
+
+-- Main GUI (only loads after color selection)
+function startMainGUI()
+    local fr = Instance.new("Frame", sg)
+    fr.Size = UDim2.new(0, 200, 0, 250)
+    fr.Position = UDim2.new(1, -210, 0, 10)
+    fr.BackgroundColor3 = savedColor -- Set chosen color
+
+    local hd = Instance.new("Frame", fr)
+    hd.Size = UDim2.new(1, 0, 0, 25)
+    hd.BackgroundColor3 = savedColor:Lerp(Color3.new(0, 0, 0), 0.5) -- Darker header
+
+    local cl = Instance.new("TextButton", hd)
+    cl.Size = UDim2.new(0, 25, 1, 0)
+    cl.Position = UDim2.new(1, -25, 0, 0)
+    cl.Text = "X"
+    cl.BackgroundColor3 = Color3.fromRGB(150, 50, 50)
+    cl.MouseButton1Click:Connect(function() sg:Destroy() end)
+
+    -- More UI elements can be added here...
+end
